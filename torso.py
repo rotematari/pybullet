@@ -7,7 +7,7 @@ p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
 # Load the ground
 plainid = p.loadURDF("plane.urdf")
-p.setGravity(0,0,-10)
+# p.setGravity(0,0,-10)
 # Load the arm and torso URDF
 startPos = [0,0,0]
 startOrientation = p.getQuaternionFromEuler([0,0,0])
@@ -24,8 +24,16 @@ arm_id = p.loadURDF(r"URDF\arm_with_torso.urdf",startPos,startOrientation)
 # orientation = [x for x in orientation]
 # Set the joint's child link to the specific location
 # p.resetBasePositionAndOrientation(arm_id, joint_index, position, 1)
-
+trarget = 1
 # Simulation loop
 for _ in range(10000):
     p.stepSimulation()
     time.sleep(1./240.)
+    maxForce = 10
+    
+    mode = p.POSITION_CONTROL
+    p.setJointMotorControl2(arm_id, 1,
+ 	controlMode=mode, force=maxForce,targetPosition=trarget)
+    p.setJointMotorControl2(arm_id, 3,
+ 	controlMode=mode, force=maxForce,targetPosition=trarget)
+    trarget += 0.5
